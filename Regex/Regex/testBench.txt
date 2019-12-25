@@ -1,0 +1,13 @@
+liter_0 <= "11001110"; liter_1 <= "11101100"; wait for 10 ns;
+liter_0 <= "11100100"; liter_1 <= "00101100"; wait for 10 ns;
+liter_0 <= "11101101"; liter_1 <= "11101010"; wait for 10 ns;
+liter_0 <= "11100000"; liter_1 <= "11101110"; wait for 10 ns;
+liter_0 <= "11100110"; liter_1 <= "11100011"; wait for 10 ns;
+liter_0 <= "11100100"; liter_1 <= "11100100"; wait for 10 ns;
+liter_0 <= "11111011"; liter_1 <= "11100000"; wait for 10 ns;
+liter_0 <= "11100010"; liter_1 <= "11110001"; wait for 10 ns;
+liter_0 <= "11100101"; liter_1 <= "11110010"; wait for 10 ns;
+liter_0 <= "11110111"; liter_1 <= "11100000"; wait for 10 ns;
+liter_0 <= "11100101"; liter_1 <= "11110000"; wait for 10 ns;
+liter_0 <= "11110000"; liter_1 <= "11100000"; wait for 10 ns;
+liter_0 <= "11101110"; liter_1 <= "11111111"; wait for 10 ns;
