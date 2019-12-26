@@ -9,10 +9,34 @@
 
 using namespace std;
 //liter_0 <= "00000100"; liter_1 <= "00000001"; wait for 10 ns;
-int main()
+int main(uint_fast16_t argc, char* argv[])
 {
+	int StreamNumber = 1;
+
+	setlocale(LC_ALL, "Russian");
+	for (uint_fast16_t i = 1; i < argc; i++){
+		if (strcmp(argv[i], "-i") == 0){
+			cout << endl << endl;
+			cout << ">>--------------------------   Info   --------------------------<<" << endl;
+			cout << ">>  -i     |  Информация о параметрах                           <<" << endl;
+			cout << ">>  -s     |  Количество потоков                                <<" << endl;
+			cout << ">>--------------------------------------------------------------<<" << endl;
+			cout << endl;
+			return 0;
+		}
+		
+		if (strcmp(argv[i], "-s") == 0){
+			if (argv[i + 1][0] != '-')
+				sscanf_s(argv[i + 1], "%d", &StreamNumber);
+		}
+	}
+
+
+	
 	string line;
-	vector<string>linesArray, linesArray1,linesArray2;
+	vector<string>linesArray;
+	vector<vector<string>>linesArrayArr;
+	linesArrayArr.resize(StreamNumber);
 	ifstream Huffman("StandartDataHEX.txt");
 	if (Huffman.is_open())
 	{
@@ -27,24 +51,42 @@ int main()
 			unsigned int test1;
 			test >> test1;
 			bitset<8>bits(test1);
-			if (i % 2 == 0)
-				linesArray1.push_back(bits.to_string());
-			else
-				linesArray2.push_back(bits.to_string());
+			linesArrayArr[i % StreamNumber].push_back(bits.to_string());
+			
 			i++;
 		}
 	}
-	//vector<string>linesArray1(linesArray.begin(), linesArray.begin() + linesArray.size() / 2);
-	//vector<string>linesArray2(linesArray.begin() + linesArray.size() / 2, linesArray.end());
 	ofstream fout;
-	cout << linesArray1.size() << "   " << linesArray2.size() << endl;
+	string testBench;
 	fout.open("testBench.txt");
-	for(int i=0;i<linesArray1.size();i++)
-	{
-		string one = "liter_0 <= \""+linesArray1[i]+"\"; liter_1 <= \""+linesArray2[i]+"\"; wait for 10 ns;";
-		fout << one << endl;
+	
+	for (int j = 1; j < linesArrayArr.size(); j++) {
+		if (linesArrayArr[0].size() > linesArrayArr[j].size()) {
+			linesArrayArr[j].push_back("00000000");
+		}
+	}
+	for(int i=0;i<linesArrayArr[0].size();i++){
+		
+		testBench = "";
+		for (int j = 0; j < linesArrayArr.size(); j++)
+			testBench += "liter_" + to_string(j) + " <= \"" + linesArrayArr[j][i] + "; ";
+		testBench+= "wait for 10 ns;";
+		fout << testBench << endl;
+		
 	}
 	fout.close();
+
+	vector<string>mems;
+	mems.resize(StreamNumber);
+	for (int i = 0; i < StreamNumber; i++) {
+		ofstream fout;
+		fout.open("Mem_" + to_string(i) + ".coe");
+		mems[i] += "MEMORY_INITIALIZATION_RADIX=2;\nMEMORY_INITIALIZATION_VECTOR = \n";
+		for (int j = 0; j < linesArrayArr[0].size(); j++){
+			mems[i] += linesArrayArr[i][j] + ";\n";
+		}
+		fout << mems[i];
+	}
 }
 
 // Запуск программы: CTRL+F5 или меню "Отладка" > "Запуск без отладки"
