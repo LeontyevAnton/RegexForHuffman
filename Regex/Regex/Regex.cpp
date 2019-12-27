@@ -68,10 +68,9 @@ int main(uint_fast16_t argc, char* argv[])
 	ofstream tout,fout;
 	tout.open("MEM.coe");
 	fout.open("TestBench.txt");
-	
+	int temo = 0;
 	tout << "MEMORY_INITIALIZATION_RADIX=2;\nMEMORY_INITIALIZATION_VECTOR = \n";
 	for (int r = 0; r < name.size(); r++) {
-		
 		string line;
 		vector<string>linesArray;
 		vector<vector<string>>linesArrayArr;
@@ -131,14 +130,37 @@ int main(uint_fast16_t argc, char* argv[])
 			//
 		//}
 			if(r==name.size()-1 && j== linesArrayArr[0].size()-1)
-				mems += ";";
+				mems += "";
 			else {
 					mems += ",\n";
 			}
 			tout << mems;
 			//cout << j << endl;
 		}
+		temo = linesArrayArr[0].size();
 	}
+	for (int j = 0; j < 32; j++) {
+
+		if ((pow(2, j) - name.size() * temo) > 0) {
+			tout << ",";
+			for (int k = 0; k < 8 * StreamNumber * (pow(2, j) - name.size() * temo) - 1; k++) {
+				if (k% (8 * StreamNumber) == 0)
+					tout << "\n"; 
+				tout << "0";
+				if ((k + 1) % (8 * StreamNumber) == 0)
+					tout << ",";
+			}
+			tout << 0;
+			//	tout << ",\n";
+			//}
+			//for (int g = 0; g < StreamNumber * 8; g++) {
+			//	tout << "0";
+			//}
+
+			break;
+		}
+	}
+	tout << ";";
 	fout.close();
 	tout.close();
 }
